@@ -1,3 +1,8 @@
+#don't commit project.properties files because it may contain local file path
+*.properties
+#android-support-v4.jar file causes error, so no jar files allow :)
+*.jar
+
 # Built application files
 *.apk
 *.ap_
