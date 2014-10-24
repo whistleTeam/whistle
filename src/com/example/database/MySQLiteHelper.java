@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 	
-	   // Logcat tag
+	   // Logcat 
      private static final String LOG = MySQLiteHelper.class.getName();
     
 	  private static final String DATABASE_NAME = "mydb.db";
@@ -407,7 +407,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	     
 	        String selectQuery = "SELECT  * FROM " + GameTable.TABLE_GAME + " game, "
 	                + PersonTable.TABLE_PERSON + " player, " + OwnsTable.TABLE_OWNS + " ownstab WHERE player."
-	                + PersonTable.TABLE_PERSON + " = '" + player_name + "'" + " AND player." + OwnsTable.COLUMN_ID
+	                + PersonTable.COLUMN_NAME + " = '" + player_name + "'" + " AND player." + OwnsTable.COLUMN_ID
 	                + " = " + "ownstab." + OwnsTable.COLUMN_PLAYER_ID + " AND game." + OwnsTable.COLUMN_ID + " = "
 	                + "ownstab." + OwnsTable.COLUMN_GAME_ID;
 	     
@@ -443,7 +443,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	     
 	        String selectQuery = "SELECT  * FROM " + GameTable.TABLE_GAME + " game, "
 	                + PersonTable.TABLE_PERSON + " player, " + PlayedInTable.TABLE_PLAYEDIN + " playedin WHERE player."
-	                + PersonTable.TABLE_PERSON + " = '" + player_name + "'" + " AND player." + PlayedInTable.COLUMN_ID
+	                + PersonTable.COLUMN_NAME + " = '" + player_name + "'" + " AND player." + PlayedInTable.COLUMN_ID
 	                + " = " + "playedin." + PlayedInTable.COLUMN_PLAYER_ID + " AND game." + PlayedInTable.COLUMN_ID + " = "
 	                + "playedin." + PlayedInTable.COLUMN_GAME_ID;
 	     
@@ -477,11 +477,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	    public List<Sport> getAllFavoriteSports(String player_name) {
 	        List<Sport> sports = new ArrayList<Sport>();
 	     
-	        String selectQuery = "SELECT  * FROM " + SportTable.TABLE_SPORT + " game, "
-	                + PersonTable.TABLE_PERSON + " player, " + PlayedInTable.TABLE_PLAYEDIN + " playedin WHERE player."
-	                + PersonTable.TABLE_PERSON + " = '" + player_name + "'" + " AND player." + PlayedInTable.COLUMN_ID
-	                + " = " + "playedin." + PlayedInTable.COLUMN_PLAYER_ID + " AND game." + PlayedInTable.COLUMN_ID + " = "
-	                + "playedin." + PlayedInTable.COLUMN_GAME_ID;
+	        String selectQuery = "SELECT  * FROM " + SportTable.TABLE_SPORT + " sp, "
+	                + PersonTable.TABLE_PERSON + " player, " + FavoriteTable.TABLE_FAVORITE+ " fav WHERE player."
+	                + PersonTable.COLUMN_NAME + " = '" + player_name + "'" + " AND player." + FavoriteTable.COLUMN_ID
+	                + " = " + "fav." + FavoriteTable.COLUMN_PLAYER_ID + " AND sp." + FavoriteTable.COLUMN_ID + " = "
+	                + "fav." + FavoriteTable.COLUMN_SPORT_ID;
 	     
 	        Log.e(LOG, selectQuery);
 	     
@@ -517,7 +517,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	    public void deletePersonAndOwnedGames(Person person, boolean should_delete_all_owned_games) {
 	        SQLiteDatabase db = this.getWritableDatabase();
 	     
-	        // before deleting tag
+	        // before deleting person
 	        // check if games under this player should also be deleted
 	        if (should_delete_all_owned_games) {
 	            // get all games under this player
@@ -543,8 +543,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	        SQLiteDatabase db = this.getWritableDatabase();
 	 
 	        ContentValues values = new ContentValues();
-	        values.put(GameTable.COLUMN_ID, game_id);
-	        values.put(PersonTable.COLUMN_ID, player_id);
+	        values.put(OwnsTable.COLUMN_GAME_ID, game_id);
+	        values.put(OwnsTable.COLUMN_PLAYER_ID, player_id);
 	 
 	        long id = db.insert(OwnsTable.TABLE_OWNS, null, values);
 	 
@@ -558,8 +558,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	        SQLiteDatabase db = this.getWritableDatabase();
 	 
 	        ContentValues values = new ContentValues();
-	        values.put(SportTable.COLUMN_ID, sport_id);
-	        values.put(PersonTable.COLUMN_ID, player_id);
+	        values.put(FavoriteTable.COLUMN_SPORT_ID, sport_id);
+	        values.put(FavoriteTable.COLUMN_PLAYER_ID, player_id);
 	 
 	        long id = db.insert(FavoriteTable.TABLE_FAVORITE, null, values);
 	 
@@ -573,61 +573,94 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	        SQLiteDatabase db = this.getWritableDatabase();
 	 
 	        ContentValues values = new ContentValues();
-	        values.put(GameTable.COLUMN_ID, game_id);
-	        values.put(PersonTable.COLUMN_ID, player_id);
+	        values.put(PlayedInTable.COLUMN_GAME_ID, game_id);
+	        values.put(PlayedInTable.COLUMN_PLAYER_ID, player_id);
 	 
 	        long id = db.insert(PlayedInTable.TABLE_PLAYEDIN, null, values);
 	 
 	        return id;
 	    }
 	    
+	    
+	    
+	   
+	    
 	    /**
-	     removing player and game from the OwnsTable and PlayedInTable
-	     query to find player_id and game_id and remove the row
-	     // Updating a  favorite
-	    // Following method will remove the player assigned to a favorite
-	     ///
-	    public int updateFavorite(long id, long player_id) {
+	     removing a sport from a person's favorite
+	     Following method will remove the player assigned to a favorite
+	     **/
+	    public void removeFavorite(long sport_id, long player_id) {
 	        SQLiteDatabase db = this.getWritableDatabase();
 	     
-	        ContentValues values = new ContentValues();
-	        values.put(PersonTable.TABLE_PERSON, player_id);
+	     	String selectQuery  = "SELECT  * FROM " + FavoriteTable.TABLE_FAVORITE 
+	     						+ " fav WHERE fav.player_id = " 
+	     						+ player_id + " and fav.sport_id = " + sport_id;
+
+ 			Log.e(LOG, selectQuery);
 	     
-	        // updating row
-	        return db.update(SportTable.TABLE_SPORT, values, SportTable.COLUMN_ID + " = ?",
-	                new String[] { String.valueOf(id) });
+	        Cursor c = db.rawQuery(selectQuery, null);
+	     
+	        // looping through all rows and deleting entry
+	        if (c.moveToFirst()) {
+	            do {
+	               
+	        db.delete(FavoriteTable.TABLE_FAVORITE , FavoriteTable.COLUMN_ID + " = ?",
+	                new String[] { String.valueOf(c.getInt(c.getColumnIndex(FavoriteTable.COLUMN_ID)))});
+	                
+	                } while (c.moveToNext());
+	        }  
+	    }
+	    /**
+	     removing a game that a user playedin
+	     Following method will remove playedin relationship btwn the player and game
+	     **/
+	    public void removePlayedIn(long game_id, long player_id) {
+	        SQLiteDatabase db = this.getWritableDatabase();
+	     
+	     	String selectQuery  = "SELECT  * FROM " + PlayedInTable.TABLE_PLAYEDIN
+	     						+ " played WHERE played.player_id = " 
+	     						+ player_id + " and played.game_id = " + game_id;
+
+			Log.e(LOG, selectQuery);
+	     
+	        Cursor c = db.rawQuery(selectQuery, null);
+	     
+	        // looping through all rows and deleting entry
+	        if (c.moveToFirst()) {
+	            do {
+	               
+	        db.delete(PlayedInTable.TABLE_PLAYEDIN , PlayedInTable.COLUMN_ID + " = ?",
+	                new String[] { String.valueOf(c.getInt(c.getColumnIndex(PlayedInTable.COLUMN_ID)))});
+	                
+	                } while (c.moveToNext());
+	        }  
 	    }
 	    
-	    //
-	     // Updating an owned game
-	     // Following method will remove the player from owning the game
-	     //
-	    public int updateOwnedGame(long id, long player_id) {
+	    /**
+	     removing a game that a user owns
+	     Following method will remove owns relationship btwn the player and game
+	     **/
+		    public void removeOwns(long game_id, long player_id) {
 	        SQLiteDatabase db = this.getWritableDatabase();
 	     
-	        ContentValues values = new ContentValues();
-	        values.put(PersonTable.TABLE_PERSON, player_id);
+	     	String selectQuery  = "SELECT  * FROM " + OwnsTable.TABLE_OWNS
+	     						+ " own WHERE own.player_id = " 
+	     						+ player_id + " and own.game_id = " + game_id;
+
+			Log.e(LOG, selectQuery);
 	     
-	        // updating row
-	        return db.update(GameTable.TABLE_GAME, values, GameTable.COLUMN_ID + " = ?",
-	                new String[] { String.valueOf(id) });
+	        Cursor c = db.rawQuery(selectQuery, null);
+	     
+	        // looping through all rows and deleting entry
+	        if (c.moveToFirst()) {
+	            do {
+	               
+	        db.delete(OwnsTable.TABLE_OWNS, OwnsTable.COLUMN_ID + " = ?",
+	                new String[] { String.valueOf(c.getInt(c.getColumnIndex(OwnsTable.COLUMN_ID)))});
+	                
+	                } while (c.moveToNext());
+	        }  
 	    }
-	    
-	    //
-	     // Updating an game playedin
-	     // Following method will remove the player from playing in game
-	     //
-	    public int updatePlayedIn(long id, long player_id) {
-	        SQLiteDatabase db = this.getWritableDatabase();
-	     
-	        ContentValues values = new ContentValues();
-	        values.put(PersonTable.TABLE_PERSON, player_id);
-	     
-	        // updating row
-	        return db.update(GameTable.TABLE_GAME, values, GameTable.COLUMN_ID + " = ?",
-	                new String[] { String.valueOf(id) });
-	    }
-	    **/
 	    
 	    
 	    /**

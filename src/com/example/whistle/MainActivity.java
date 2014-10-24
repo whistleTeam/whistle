@@ -18,15 +18,15 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		
-		//test database(Person, Game, Sport)
+		//delete exisitng db
+		this.deleteDatabase("mydb.db");
+
+		//create new and test database(Person, Game, Sport)
 		db = new MySQLiteHelper(getApplicationContext());
 		Person p1 = new Person("00", "00", "00", "00");
 		Person p2 = new Person("01", "00", "00", "00");
 		Person p3 = new Person("02", "00", "00", "00");
 		Person p4 = new Person("03", "00", "00", "00");
-		Person p5 = new Person("04", "00", "00", "00");
 
 		long p1_id = db.createPerson(p1);
         long p2_id = db.createPerson(p2);
@@ -46,7 +46,8 @@ public class MainActivity extends ActionBarActivity {
         // Deleting a Person
         Log.d("Delete Person", "Deleting a Person"); 
         db.deletePerson(p1_id);
- 
+        Log.d("New Person Count", "Person Count: " + db.getAllPersons().size());
+
         
         
         
@@ -54,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
         Game g2 = new Game("01", "00", "00", "00");
         Game g3 = new Game("02", "00", "00", "00");
         Game g4 = new Game("03", "00", "00", "00");
-        Game g5 = new Game("04", "00", "00", "00");
 
 		long g1_id = db.createGame(g1);
         long g2_id = db.createGame(g2);
@@ -74,16 +74,14 @@ public class MainActivity extends ActionBarActivity {
         // Deleting a Game
         Log.d("Delete Game", "Deleting a Game"); 
         db.deletePerson(g1_id);
- 
-        
-        
-        
+        Log.d("New Game Count", "Game Count: " + db.getAllGames().size());
+
+                
         
         Sport s1 = new Sport("00");
         Sport s2 = new Sport("01");
         Sport s3 = new Sport("02");
         Sport s4 = new Sport("03");
-        Sport s5 = new Sport("04");
 
 		long s1_id = db.createSport(s1);
         long s2_id = db.createSport(s2);
@@ -103,8 +101,56 @@ public class MainActivity extends ActionBarActivity {
         // Deleting a Sport
         Log.d("Delete Sport", "Deleting a Sport"); 
         db.deleteSport(p1_id);
- 
+        Log.d("New Sport Count", "Sport Count: " + db.getAllSports().size());
 
+        
+        Log.d("Create favorite sport", " Player's fav sport:: " + db.createFavoriteSport(s2_id, p2_id));
+        Log.d("Create favorite 2nd sport", " Player's 2nd fav sport:: " + db.createFavoriteSport(s3_id, p2_id));
+
+        
+        Log.d("Get Favorite sport", "Player's fav sport: " );
+        List<Sport> allFavoriteSports = db.getAllFavoriteSports(p2.name);
+        for (Sport sport : allFavoriteSports) {
+            Log.d("Sport", sport.getName());
+        }
+        Log.d("Remove favorite sport", " Player's fav sport:: ");
+        db.removeFavorite(s2_id, p2_id);
+        Log.d("Get Favorite sport", "Player's fav sport: " );
+        List<Sport> allFavoriteSports2 = db.getAllFavoriteSports(p2.name);
+        for (Sport sport : allFavoriteSports2) {
+            Log.d("Sport", sport.getName());
+        }
+        
+        
+        Log.d("Create playedin game", " Player payedin:: " + db.createPlayedIn(g3_id, p3_id)); 
+        Log.d("Get playedin game", "Player's playedin game: ");
+        List<Game> GamesPlayedIn = db.getAllGamesPlayedIn(p3.name);
+        for (Game game : GamesPlayedIn) {
+            Log.d("Game", game.getDescription());
+        }
+        Log.d("Remove playedin game", " Player payedin:: ");
+        db.removePlayedIn(g3_id, p3_id);
+        Log.d("Get playedin game", "Player's playedin game: ");
+        List<Game> getAllGamesPlayedIn2 = db.getAllGamesPlayedIn(p3.name);
+        for (Game game : getAllGamesPlayedIn2) {
+            Log.d("Game", game.getDescription());
+        }
+            
+        
+        Log.d("Create owned game", " Player owns game:: " + db.createOwnedGame(g4_id, p4_id));
+        Log.d("Get owned game", "Player owns game: ");
+        List<Game> allGamesOwnedByPlayer = db.getAllGamesOwnedByPlayer(p4.name);
+        for (Game game : allGamesOwnedByPlayer) {
+            Log.d("Game", game.getDescription());
+        }
+        Log.d("Remove owned game", " Player's owns game:: ");
+        db.removeOwns(g4_id, p4_id);
+        Log.d("Get owned game", "Player owns game: ");
+        List<Game> allGamesOwnedByPlayer2 = db.getAllGamesOwnedByPlayer(p4.name);
+        for (Game game : allGamesOwnedByPlayer2) {
+            Log.d("Game", game.getDescription());
+        }
+            
         // Don't forget to close database connection
         db.closeDB();
 	}
