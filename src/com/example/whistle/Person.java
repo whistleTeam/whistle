@@ -49,7 +49,7 @@ public class Person {
 	{
 		this.phoneNumber = phoneNumber;
 	}
-	public void setID(int id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}

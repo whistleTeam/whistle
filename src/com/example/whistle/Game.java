@@ -6,6 +6,11 @@ public class Game {
 	
 	String time,  date;
 	String location,  description;
+	int id;
+	public Game()
+	{
+		
+	}
 	
 	Game(String time, String date, String location, String description  )
 	{
@@ -15,7 +20,10 @@ public class Game {
 		this.description = description;
 	}
 	
-
+	public String getDate()
+	{
+		return date;
+	}
 	public String getTime()
 	{
 		return time;
@@ -28,9 +36,29 @@ public class Game {
 	{
 		return description;
 	}
-	public String getDate()
+	public int getId()
 	{
-		return date;
+		return id;
+	}
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+	public void setTime(String time)
+	{
+		this.time= time;
+	}
+	public void setLocation(String location)
+	{
+		this.location =  location;
+	}
+	public void setDescription(String description)
+	{
+		this.description= description;
+	}
+	public void setDate(String date)
+	{
+		this.date = date;
 	}
 
 }

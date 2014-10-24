@@ -19,7 +19,8 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		//test database(Person)
+		
+		//test database(Person, Game, Sport)
 		db = new MySQLiteHelper(getApplicationContext());
 		Person p1 = new Person("00", "00", "00", "00");
 		Person p2 = new Person("01", "00", "00", "00");
@@ -47,6 +48,62 @@ public class MainActivity extends ActionBarActivity {
         db.deletePerson(p1_id);
  
         
+        
+        
+        Game g1 = new Game("00", "00", "00", "00");
+        Game g2 = new Game("01", "00", "00", "00");
+        Game g3 = new Game("02", "00", "00", "00");
+        Game g4 = new Game("03", "00", "00", "00");
+        Game g5 = new Game("04", "00", "00", "00");
+
+		long g1_id = db.createGame(g1);
+        long g2_id = db.createGame(g2);
+        long g3_id = db.createGame(g3);
+        long g4_id = db.createGame(g4);
+ 
+        Log.d("Game Count", "Game Count: " + db.getAllGames().size());
+ 
+     // Getting all persons
+        Log.d("Get games", "Getting All games");
+ 
+        List<Game> allGames = db.getAllGames();
+        for (Game game : allGames) {
+            Log.d("Person", game.getDescription());
+        }
+        
+        // Deleting a Game
+        Log.d("Delete Game", "Deleting a Game"); 
+        db.deletePerson(g1_id);
+ 
+        
+        
+        
+        
+        Sport s1 = new Sport("00");
+        Sport s2 = new Sport("01");
+        Sport s3 = new Sport("02");
+        Sport s4 = new Sport("03");
+        Sport s5 = new Sport("04");
+
+		long s1_id = db.createSport(s1);
+        long s2_id = db.createSport(s2);
+        long s3_id = db.createSport(s3);
+        long s4_id = db.createSport(s4);
+ 
+        Log.d("Sport Count", "Sport Count: " + db.getAllSports().size());
+ 
+     // Getting all Sports
+        Log.d("Get Sports", "Getting All Sports");
+ 
+        List<Sport> allSports = db.getAllSports();
+        for (Sport sport : allSports) {
+            Log.d("Sport", sport.getName());
+        }
+        
+        // Deleting a Sport
+        Log.d("Delete Sport", "Deleting a Sport"); 
+        db.deleteSport(p1_id);
+ 
 
         // Don't forget to close database connection
         db.closeDB();
