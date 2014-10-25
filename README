@@ -11,3 +11,74 @@ CIS 465 Whistle project - an android mobile application that helps people set up
 [Margaret Stutz](https://github.com/MaggyStutz) | ---
 [Lauren Tiffany](https://github.com/ltiffan2) | ---
 [Peter Caruso](https://github.com/pcaruso2) | ---
+
+
+Making calls to database:
+
+1. Declare the database Helper
+ 	MySQLiteHelper db;
+ 	
+2. (Optional) 	Delete exisitng db to remove all existing data entries and tables and allow for a clean start
+	this.deleteDatabase("mydb.db");
+	
+3. Create new database, if database already exists get currently existing database to make changes
+	db = new MySQLiteHelper(getApplicationContext());
+	
+4. Perform calls to databse
+     db.createPerson(Person person):long
+     db.getPerson(long person_id):Person
+     db.getAllPersons():List<Person>
+     db.getPersonCount():int
+     db.updatePerson(Person p):int
+     db.deletePerson(long person_id):void
+     
+     db.createGame(Game game):long
+     db.getGame(long game_id):Game
+     db.getAllGames():List<Game>
+     db.getGameCount():int
+     db.updateGame(Game g):int
+     db.deleteGame(long game_id):void
+     
+     db.createSport(Sport sport):long
+     db.getSport(long sport_id):Sport
+     db.getAllSports():List<Sport>
+     db.getSportCount():int
+     db.updateSport(Sport s):int
+     db.deleteSport(long sport_id):void
+     
+     db.createOwnedGame(long game_id, long player_id):long
+     db.getAllGamesOwnedByPlayer(String player_name):List<Game>
+     db.removeOwns(long game_id, long player_id):void
+     db.deletePersonAndOwnedGames(Person person, boolean should_delete_all_owned_games):void
+
+     db.createPlayedIn(long game_id, long player_id):long
+     db.getAllGamesPlayedIn(String player_name):List<Game>
+     db.removePlayedIn(long game_id, long player_id):void
+     
+     db.createFavoriteSport(long sport_id, long player_id):long
+     db.getAllFavoriteSports(String player_name):List<Sport>
+     db.removeFavorite(long sport_id, long player_id):void
+     
+     db.getDateTime():String
+    
+5. Close the db
+     db.closeDB():void
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
