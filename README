@@ -24,7 +24,7 @@ Making calls to database:
 3. Create new database, if database already exists get currently existing database to make changes
 	db = new MySQLiteHelper(getApplicationContext());
 	
-4. Perform calls to databse
+4. Perform calls to database
      db.createPerson(Person person):long
      db.getPerson(long person_id):Person
      db.getAllPersons():List<Person>
