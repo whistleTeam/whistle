@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@layout/main_background_gradient"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="300.0sp"
+        android:height="72.0sp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/whistle"
+        android:textColor="#ffffff"
+        android:textSize="72.0sp"
+        android:textStyle="italic"
+        android:typeface="normal" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="200sp"
+        android:textColor="#00aff0"
+        android:textSize="24.0sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/login_button" />
+
+</LinearLayout>
